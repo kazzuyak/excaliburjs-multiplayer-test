@@ -1,0 +1,7 @@
+/.idea/
+/.vscode/
+/bundle/
+/dist/
+/node_modules/
+/reports/
+/.cache/
