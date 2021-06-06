@@ -1,19 +1,12 @@
 import express from "express";
-import Bundler from "parcel-bundler";
 import http from "http";
-import { Server } from "socket.io";
+import Bundler from "parcel-bundler";
+import { SocketConnection } from "./socket-connection";
+
 const app = express();
 
 const server = http.createServer(app);
-const io = new Server(server);
-
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-  });
-})
+new SocketConnection(server).listen();
 
 const bundler = new Bundler(__dirname + "/../client/game.html", {});
 app.use(bundler.middleware());

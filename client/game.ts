@@ -1,36 +1,42 @@
 import {
-  Actor,
-  Body,
-  Collider,
   Color,
   DisplayMode,
-  Engine,
-  Shape,
+  Engine
 } from "excalibur";
-import { io } from "socket.io-client";
+import { KeyEvent, Keys } from "excalibur/dist/Input/Keyboard";
+import { InputType } from "../shared/enums/input-type";
+import { GameScene } from "./scenes/game-scene";
+import { SocketClient } from "./socket-client";
 
-const socket = io();
-
-socket.on('disconnect', function() {
-  location.reload();
-});
+const socketClient = new SocketClient();
 
 const engine = new Engine({
   backgroundColor: Color.Black,
   displayMode: DisplayMode.FullScreen,
 });
 
-const square = new Actor({
-  x: engine.halfDrawWidth,
-  y: engine.halfDrawHeight,
-  color: Color.White,
-  body: new Body({
-    collider: new Collider({
-      shape: Shape.Box(engine.halfDrawWidth / 10, engine.halfDrawHeight / 10),
-    }),
-  }),
+const gameScene = new GameScene(engine, socketClient);
+
+socketClient.addOnPingListener(gameScene.receiveUpdate.bind(gameScene));
+
+engine.input.keyboard.on("press", (event: KeyEvent) => {
+  const keyMap: {
+    [K in Keys]?: InputType
+  } = {
+    [Keys.W]: InputType.up,
+    [Keys.A]: InputType.left,
+    [Keys.S]: InputType.down,
+    [Keys.D]: InputType.right,
+  }
+
+  const input = keyMap[event.key];
+
+  if (input !== undefined) {
+    socketClient.sendInput(input);
+  }
 });
 
-engine.add(square);
+engine.addScene("game", gameScene);
+engine.goToScene("game");
 
 engine.start();
