@@ -1,7 +1,7 @@
 {
-  "name": "excaliburjs-socket-template",
+  "name": "excaliburjs-snake-online",
   "version": "1.0.0",
-  "description": "Excalibur template with socket.io",
+  "description": "Snake Online",
   "private": "true",
   "scripts": {
     "start": "node dist/server/server.js",
@@ -12,7 +12,11 @@
   "engines": {
     "node": "14.x"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kazzuyak/excaliburjs-snake-online.git"
+  },
+  "author": "https://github.com/kazzuyak/excaliburjs-snake-online/graphs/contributors",
   "license": "ISC",
   "devDependencies": {
     "@types/connect-livereload": "^0.5.31",
