@@ -13,10 +13,10 @@ export class GameLoop {
 
     this.serverInterval = setInterval(() => {
       this.listeners.forEach((listener) => listener());
-    }, 500);
+    }, 400);
   }
 
-  public stopServer() {
+  public stopLoop() {
     if (this.serverInterval === undefined) {
       return;
     }
