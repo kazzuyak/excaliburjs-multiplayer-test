@@ -1,4 +1,5 @@
 import { Scene, Vector } from "excalibur";
+import { GameState } from "../../shared/contracts/game-state";
 import { ScreenInformation } from "../entities/screen-information";
 import { GridCell } from "./grid-cell";
 import { GridLine } from "./grid-line";
@@ -54,14 +55,14 @@ export class Grid {
     });
   }
 
-  public update(players: { x: number; y: number; id: string }[]) {
+  public update(gameState: GameState) {
     this.cells.forEach((cellRow: GridCell[], rowIndex: number) => {
       cellRow.forEach((cell: GridCell, colIndex: number) => {
         cell.setEmpty();
 
-        for (const player of players) {
+        for (const player of gameState.players) {
           if (player.x === rowIndex && player.y === colIndex) {
-            cell.setSnake()
+            cell.setSnake();
 
             return;
           }

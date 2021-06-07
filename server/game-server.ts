@@ -23,7 +23,6 @@ export class GameServer {
 
     this.socketServer.updateClients({
       players: this.snakes.map((player: Snake) => ({
-        id: player.id,
         x: player.x,
         y: player.y,
         isDead: player.isDead,

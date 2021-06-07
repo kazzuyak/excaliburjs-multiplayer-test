@@ -1,11 +1,8 @@
 import { io } from "socket.io-client";
+import { GameState } from "../shared/contracts/game-state";
 import { InputType } from "../shared/enums/input-type";
 
-interface IPing {
-  players: { x: number; y: number; id: string }[];
-}
-
-type PingCallback = (parameters: IPing) => void;
+type PingCallback = (gameState: GameState) => void;
 
 export class SocketClient {
   private readonly socket = io();
@@ -15,8 +12,8 @@ export class SocketClient {
     this.socket.on("disconnect", () => {
       location.reload();
     });
-    this.socket.on("ping", (parameters: IPing) => {
-      this.onPingListeners.forEach((listener) => listener(parameters));
+    this.socket.on("ping", (gameState: GameState) => {
+      this.onPingListeners.forEach((listener) => listener(gameState));
     });
   }
 
