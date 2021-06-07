@@ -1,7 +1,7 @@
 {
   "name": "excaliburjs-snake-online",
   "version": "1.0.0",
-  "description": "Snake Online",
+  "description": "Simple Snake Online Browser Game written in Typescript.",
   "private": "true",
   "scripts": {
     "start": "node dist/server/server.js",
@@ -41,5 +41,17 @@
     "parcel-bundler": "^1.12.5",
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2"
-  }
+  },
+  "keywords": [
+    "excalibur",
+    "game",
+    "javascript",
+    "multiplayer",
+    "online",
+    "server",
+    "simple",
+    "snake",
+    "socket",
+    "typescript"
+  ]
 }
