@@ -1,14 +1,15 @@
-import { InputType } from "../../shared/enums/input-type";
-import { Snake } from "./snake";
+import { InputType } from "../shared/enums/input-type";
+import { Snake } from "./entities/snake";
+import { SocketServer } from "./socket-server";
 
 export class GameServer {
   private readonly snakes: Snake[] = [];
   private readonly mapSize = 20;
 
-  constructor() {}
+  constructor(private readonly socketServer: SocketServer) {}
 
-  public addSnake(player: Snake) {
-    this.snakes.push(player);
+  public addSnake(id: string) {
+    this.snakes.push(new Snake(id, 10, 10));
   }
 
   public update() {
@@ -20,15 +21,14 @@ export class GameServer {
       player.update();
     });
 
-    return {
+    this.socketServer.updateClients({
       players: this.snakes.map((player: Snake) => ({
         id: player.id,
         x: player.x,
         y: player.y,
         isDead: player.isDead,
-      })),
-      mapSize: this.mapSize,
-    };
+      }))
+    });
   }
 
   private isPlayerDead(player: Snake): boolean {
