@@ -17,6 +17,11 @@ https://excaliburjs-snake-online.herokuapp.com/
 - Keyboard and touchscreen (mobile) support.
 - Support any screen sizes.
 
+## Built With
+
+- Excalibur.js
+- Socket.io
+
 ## Contact
 
 - Feel free to open bug issues or suggest features.
