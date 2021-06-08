@@ -62,7 +62,7 @@ export class Snake {
     const neckPos = this.pos[1];
 
     if (neckPos !== undefined) {
-      const headPos = this.getSnakeNextHeadPos();
+      const headPos = this.pos[0];
 
       if (
         neckPos.y === headPos.y &&
