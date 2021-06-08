@@ -3,14 +3,14 @@ import { Server, Socket } from "socket.io";
 import { GameState } from "../shared/contracts/game-state";
 import { InputType } from "../shared/enums/input-type";
 
-type ConnectionListener = (id: string) => void;
+type JoinGameListener = (id: string) => void;
 type InputListener = (id: string, input: InputType) => void;
 type EmptyServerListener = () => void;
 
 export class SocketServer {
   private readonly io: Server;
   private clients: { [K in string]: {} } = {};
-  private connectionListeners: ConnectionListener[] = [];
+  private joinGameListeners: JoinGameListener[] = [];
   private inputListeners: InputListener[] = [];
   private emptyServerListeners: EmptyServerListener[] = [];
 
@@ -23,8 +23,8 @@ export class SocketServer {
     this.io.emit("ping", gameState);
   }
 
-  public addConnectionListener(callback: ConnectionListener) {
-    this.connectionListeners.push(callback);
+  public addJoinGameListener(callback: JoinGameListener) {
+    this.joinGameListeners.push(callback);
   }
 
   public addInputListener(callback: InputListener) {
@@ -38,7 +38,10 @@ export class SocketServer {
   private onConnection(socket: Socket) {
     this.clients[socket.id] = {};
 
-    this.connectionListeners.forEach((listener) => listener(socket.id));
+    socket.on("join", () => {
+      this.joinGameListeners.forEach((listener) => listener(socket.id));
+    })
+
 
     socket.on("input", (input: InputType) => {
       this.inputListeners.forEach((listener) => {
