@@ -6,16 +6,56 @@ export class Snake {
     y: 0,
   };
   public isDead = false;
+  public pos: { x: number; y: number }[] = [];
+  private shouldGrow = false;
 
-  constructor(public readonly id: string, public x: number, public y: number) {}
+  constructor(public readonly id: string, x: number, y: number) {
+    this.pos.push({ x, y });
+  }
 
   public update() {
     if (this.isDead) {
+      this.pos.pop();
+
       return;
     }
 
-    this.x += this.vel.x;
-    this.y += this.vel.y;
+    let lastPosition: { x: number; y: number } | undefined;
+
+    this.pos.forEach((position) => {
+      const positionBeforeUpdate = {
+        x: position.x,
+        y: position.y,
+      };
+
+      if (lastPosition !== undefined) {
+        position.x = lastPosition.x;
+        position.y = lastPosition.y;
+      }
+
+      lastPosition = {
+        x: positionBeforeUpdate.x,
+        y: positionBeforeUpdate.y,
+      };
+    });
+
+    if (this.shouldGrow === true) {
+      this.shouldGrow = false;
+
+      if (lastPosition !== undefined) {
+        this.pos.push({
+          x: lastPosition.x,
+          y: lastPosition.y,
+        });
+      }
+    }
+
+    this.pos[0].x += this.vel.x;
+    this.pos[0].y += this.vel.y;
+  }
+
+  public grow() {
+    this.shouldGrow = true;
   }
 
   public updateVel(input: InputType) {
@@ -45,5 +85,12 @@ export class Snake {
       y: 0,
     };
     this.isDead = true;
+  }
+
+  public getSnakeNextHeadPos() {
+    return {
+      x: this.pos[0].x + this.vel.x,
+      y: this.pos[0].y + this.vel.y,
+    };
   }
 }

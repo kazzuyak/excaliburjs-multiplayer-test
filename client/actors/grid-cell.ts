@@ -22,4 +22,14 @@ export class GridCell extends Actor {
     this.visible = true;
     this.color = Color.Green;
   }
+
+  public setDeadSnake() {
+    this.visible = true;
+    this.color = Color.DarkGray;
+  }
+
+  public setFood() {
+    this.visible = true;
+    this.color = Color.Vermilion;
+  }
 }

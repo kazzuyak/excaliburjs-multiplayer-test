@@ -60,11 +60,25 @@ export class Grid {
       cellRow.forEach((cell: GridCell, colIndex: number) => {
         cell.setEmpty();
 
-        for (const player of gameState.players) {
-          if (player.x === rowIndex && player.y === colIndex) {
-            cell.setSnake();
+        for (const food of gameState.foods) {
+          if (food.x === rowIndex && food.y === colIndex) {
+            cell.setFood();
 
             return;
+          }
+        }
+
+        for (const player of gameState.players) {
+          for (const position of player.pos) {
+            if (position.x === rowIndex && position.y === colIndex) {
+              cell.setSnake();
+
+              if (player.isDead) {
+                cell.setDeadSnake();
+              }
+
+              return;
+            }
           }
         }
       });

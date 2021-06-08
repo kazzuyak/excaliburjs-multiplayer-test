@@ -1,7 +1,7 @@
 export interface GameState {
   players: {
-    x: number;
-    y: number;
+    pos: { x: number; y: number }[];
     isDead: boolean;
   }[];
+  foods: { x: number; y: number }[];
 }
