@@ -12,11 +12,15 @@ export class GameServer {
 
   public addSnake(id: string) {
     this.snakes.push(new Snake(id, 10, 10));
-    this.foods.push(new Food(5, 5));
+    this.foods.push(new Food(this.getRandomPos(), this.getRandomPos()));
   }
 
   public update() {
     this.snakes = this.snakes.filter((snake) => snake.pos.length > 0);
+
+    if (this.snakes.length < this.foods.length) {
+      this.foods.shift();
+    }
 
     this.snakes.forEach((snake: Snake) => {
       this.onEatFood(snake);
@@ -47,7 +51,7 @@ export class GameServer {
     );
 
     if (food !== undefined) {
-      food.updatePos(food.x + 2, food.y + 2);
+      food.updatePos(this.getRandomPos(), this.getRandomPos());
       snake.grow();
     }
   }
@@ -64,17 +68,13 @@ export class GameServer {
     }
 
     const snakeCollision = this.snakes.some((otherSnake) => {
+      return otherSnake.pos.some((usedPos, index) => {
+        if (index === 0 && snake.id === otherSnake.id) {
+          return false;
+        }
 
-
-      return otherSnake.pos.some(
-        (usedPos, index) => {
-          if (index === 0 && snake.id === otherSnake.id) {
-            return false;
-          }
-
-          return snake.pos[0].x === usedPos.x && snake.pos[0].y === usedPos.y
-        },
-      );
+        return snake.pos[0].x === usedPos.x && snake.pos[0].y === usedPos.y;
+      });
     });
 
     return snakeCollision;
@@ -84,5 +84,11 @@ export class GameServer {
     const snake = this.snakes.find((snake) => snake.id === snakeId);
 
     snake?.updateVel(moveInput);
+  }
+
+  private getRandomPos() {
+    const min = Math.ceil(0);
+    const max = Math.floor(this.mapSize - 1);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }
