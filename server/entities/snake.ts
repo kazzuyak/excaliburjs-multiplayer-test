@@ -59,6 +59,26 @@ export class Snake {
   }
 
   public updateVel(input: InputType) {
+    const neckPos = this.pos[1];
+
+    if (neckPos !== undefined) {
+      const headPos = this.getSnakeNextHeadPos();
+
+      if (
+        neckPos.y === headPos.y &&
+        (input === InputType.left || input === InputType.right)
+      ) {
+        return;
+      }
+
+      if (
+        neckPos.x === headPos.x &&
+        (input === InputType.down || input === InputType.up)
+      ) {
+        return;
+      }
+    }
+
     this.vel.x = 0;
     this.vel.y = 0;
 
