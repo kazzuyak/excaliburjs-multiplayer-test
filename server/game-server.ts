@@ -39,6 +39,7 @@ export class GameServer {
       players: this.snakes.map((snake: Snake) => ({
         pos: snake.pos,
         isDead: snake.isDead,
+        nickname: snake.nickname
       })),
       foods: this.foods,
     });
@@ -82,7 +83,7 @@ export class GameServer {
   }
 
   public receiveInput(snakeId: string, moveInput: InputType) {
-    const snake = this.snakes.find((snake) => snake.id === snakeId);
+    const snake = this.snakes.find((snake) => snake.id === snakeId && !snake.isDead);
 
     snake?.updateVel(moveInput);
   }

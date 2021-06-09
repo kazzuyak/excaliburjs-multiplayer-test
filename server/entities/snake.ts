@@ -9,7 +9,7 @@ export class Snake {
   public pos: { x: number; y: number }[] = [];
   private shouldGrow = false;
 
-  constructor(public readonly id: string, public readonly nicknname: string, x: number, y: number) {
+  constructor(public readonly id: string, public readonly nickname: string, x: number, y: number) {
     this.pos.push({ x, y });
   }
 
