@@ -42,7 +42,7 @@ export class Grid {
         const posY = screen.startingY + colLine * cellSize + cellSize / 2;
 
         row.push(new GridCell(cellSize, new Vector(posX, posY)));
-        labelRow.push(new LabelCell(posX, posY + cellSize / 3, cellSize / 2));
+        labelRow.push(new LabelCell(posX, posY + cellSize / 4, cellSize / 3));
       }
       this.cells.push(row);
       this.labelCells.push(labelRow);
