@@ -41,7 +41,7 @@ export class HtmlInput {
       type="text"
       placeholder="Enter your nickname"
       autofocus
-      maxlength="10"
+      maxlength="4"
       style="
         height: ${this.options.height}px;
         width: ${this.options.width}px;

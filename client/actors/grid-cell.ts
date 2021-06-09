@@ -1,7 +1,7 @@
 import { Actor, Body, Collider, CollisionType, Color, Shape, Vector } from "excalibur";
 
 export class GridCell extends Actor {
-  constructor(private readonly cellSize: number, pos: Vector) {
+  constructor(public readonly cellSize: number, pos: Vector) {
     super({
       pos,
       visible: false,
@@ -20,7 +20,7 @@ export class GridCell extends Actor {
 
   public setSnake() {
     this.visible = true;
-    this.color = Color.Green;
+    this.color = Color.Chartreuse;
   }
 
   public setDeadSnake() {

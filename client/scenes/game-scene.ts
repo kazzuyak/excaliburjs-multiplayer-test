@@ -28,7 +28,7 @@ export class GameScene extends Scene {
   }
 
   public receiveUpdate(data: GameState) {
-    this.grid.update(data);
+    this.grid.update(data, this);
   }
 
   public onDeath() {

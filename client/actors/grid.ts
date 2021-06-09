@@ -3,11 +3,13 @@ import { GameState } from "../../shared/contracts/game-state";
 import { ScreenInformation } from "../entities/screen-information";
 import { GridCell } from "./grid-cell";
 import { GridLine } from "./grid-line";
+import { NicknameLabel } from "./nickname-label";
 
 export class Grid {
   private verticalLines: GridLine[] = [];
   private horizontalLines: GridLine[] = [];
   private cells: GridCell[][] = [];
+  private nicknameLabels: NicknameLabel[] = [];
   private readonly gridSize = 20;
 
   public init(scene: Scene, screen: ScreenInformation) {
@@ -55,7 +57,48 @@ export class Grid {
     });
   }
 
-  public update(gameState: GameState) {
+  public update(gameState: GameState, scene: Scene) {
+    for (const player of gameState.players) {
+      if (player.pos.length > 0) {
+        const nicknameLabel = this.nicknameLabels.find(
+          (label) => label.playerId === player.id,
+        );
+
+        const firstCell = this.cells[0][0];
+        const labelX = firstCell.pos.x + player.pos[0].x * firstCell.cellSize;
+        const labelY =
+          firstCell.pos.y + (player.pos[0].y + 0.25) * firstCell.cellSize;
+
+        if (nicknameLabel === undefined) {
+          const newLabel = new NicknameLabel(
+            player.id,
+            player.nickname,
+            labelX,
+            labelY,
+            firstCell.cellSize * 0.4,
+          );
+
+          this.nicknameLabels.push(newLabel);
+          scene.add(newLabel);
+        } else {
+          nicknameLabel.pos.x = labelX;
+          nicknameLabel.pos.y = labelY;
+        }
+      }
+    }
+
+    this.nicknameLabels = this.nicknameLabels.filter((label) => {
+      const labelHasPlayer = gameState.players.some(
+        (player) => player.id === label.playerId,
+      );
+
+      if (labelHasPlayer === false) {
+        scene.remove(label);
+      }
+
+      return labelHasPlayer;
+    });
+
     this.cells.forEach((cellRow: GridCell[], rowIndex: number) => {
       cellRow.forEach((cell: GridCell, colIndex: number) => {
         cell.setEmpty();
