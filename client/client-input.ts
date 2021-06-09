@@ -1,6 +1,5 @@
 import { Engine, Vector } from "excalibur";
 import { KeyEvent, Keys } from "excalibur/dist/Input/Keyboard";
-import { PointerType } from "excalibur/dist/Input/Pointer";
 import {
   PointerDownEvent,
   PointerMoveEvent,
@@ -54,9 +53,18 @@ export class ClientInput {
     const xDiff = event.pos.x - this.lastPointerPosition.x;
     const yDiff = event.pos.y - this.lastPointerPosition.y;
 
+    const xDiffAbs = Math.abs(xDiff);
+    const yDiffAbs = Math.abs(yDiff);
+    const diffAbs = Math.abs(xDiffAbs - yDiffAbs);
+
+    console.log(diffAbs)
+    if (diffAbs < 50) {
+      return;
+    }
+
     this.lastPointerPosition = undefined;
 
-    if (Math.abs(xDiff) >= Math.abs(yDiff)) {
+    if (xDiffAbs >= yDiffAbs) {
       if (xDiff >= 0) {
         this.listeners.forEach((listener) => listener(InputType.right));
 
