@@ -69,6 +69,11 @@ export class Grid {
           for (const position of player.pos) {
             if (position.x === rowIndex && position.y === colIndex) {
               cell.setSnake();
+
+              if (posIndex === 0) {
+                cell.setSnakeHead();
+              }
+
               this.labelCells[rowIndex][colIndex].text =
                 player.nickname[posIndex] ?? "";
 
