@@ -30,8 +30,8 @@ export class SocketClient {
     this.onDeathListeners.push(callback);
   }
 
-  public joinGame() {
-    this.socket.emit("join");
+  public joinGame(nickname: string) {
+    this.socket.emit("join", nickname);
   }
 
   public sendInput(input: InputType) {

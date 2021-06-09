@@ -10,8 +10,8 @@ export class GameServer {
 
   constructor(private readonly socketServer: SocketServer) {}
 
-  public addSnake(id: string) {
-    this.snakes.push(new Snake(id, 0, 0));
+  public addSnake(id: string, nickname: string) {
+    this.snakes.push(new Snake(id, nickname, 0, 0));
     this.foods.push(new Food(this.getRandomPos(), this.getRandomPos()));
   }
 

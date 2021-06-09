@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 import { GameState } from "../shared/contracts/game-state";
 import { InputType } from "../shared/enums/input-type";
 
-type JoinGameListener = (id: string) => void;
+type JoinGameListener = (id: string, nickname: string) => void;
 type InputListener = (id: string, input: InputType) => void;
 type EmptyServerListener = () => void;
 
@@ -42,8 +42,8 @@ export class SocketServer {
   private onConnection(socket: Socket) {
     this.clients[socket.id] = socket;
 
-    socket.on("join", () => {
-      this.joinGameListeners.forEach((listener) => listener(socket.id));
+    socket.on("join", (nickname: string) => {
+      this.joinGameListeners.forEach((listener) => listener(socket.id, nickname));
     });
 
     socket.on("input", (input: InputType) => {
