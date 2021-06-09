@@ -15,11 +15,14 @@ export class SocketClient {
     this.socket.on("ping", (gameState: GameState) => {
       this.onPingListeners.forEach((listener) => listener(gameState));
     });
-    this.socket.emit("join");
   }
 
   public addOnPingListener(callback: PingCallback) {
     this.onPingListeners.push(callback);
+  }
+
+  public joinGame() {
+    this.socket.emit("join");
   }
 
   public sendInput(input: InputType) {

@@ -42,7 +42,6 @@ export class SocketServer {
       this.joinGameListeners.forEach((listener) => listener(socket.id));
     })
 
-
     socket.on("input", (input: InputType) => {
       this.inputListeners.forEach((listener) => {
         listener(socket.id, input);
