@@ -3,13 +3,13 @@ import { GameState } from "../../shared/contracts/game-state";
 import { ScreenInformation } from "../entities/screen-information";
 import { GridCell } from "./grid-cell";
 import { GridLine } from "./grid-line";
-import { NicknameLabel } from "./nickname-label";
+import { LabelCell } from "./label-cell";
 
 export class Grid {
   private verticalLines: GridLine[] = [];
   private horizontalLines: GridLine[] = [];
   private cells: GridCell[][] = [];
-  private nicknameLabels: NicknameLabel[] = [];
+  private labelCells: LabelCell[][] = [];
   private readonly gridSize = 20;
 
   public init(scene: Scene, screen: ScreenInformation) {
@@ -36,18 +36,16 @@ export class Grid {
 
     for (let rowLine = 0; rowLine < this.gridSize; rowLine++) {
       const row = [];
+      const labelRow = [];
       for (let colLine = 0; colLine < this.gridSize; colLine++) {
-        row.push(
-          new GridCell(
-            cellSize,
-            new Vector(
-              screen.startingX + rowLine * cellSize + cellSize / 2,
-              screen.startingY + colLine * cellSize + cellSize / 2,
-            ),
-          ),
-        );
+        const posX = screen.startingX + rowLine * cellSize + cellSize / 2;
+        const posY = screen.startingY + colLine * cellSize + cellSize / 2;
+
+        row.push(new GridCell(cellSize, new Vector(posX, posY)));
+        labelRow.push(new LabelCell(posX, posY + cellSize / 3, cellSize / 2));
       }
       this.cells.push(row);
+      this.labelCells.push(labelRow);
     }
 
     this.verticalLines.forEach((line) => scene.add(line));
@@ -55,58 +53,24 @@ export class Grid {
     this.cells.forEach((row) => {
       row.forEach((cell) => scene.add(cell));
     });
+    this.labelCells.forEach((labelRow) => {
+      labelRow.forEach((labelCell) => scene.add(labelCell));
+    });
   }
 
   public update(gameState: GameState, scene: Scene) {
-    for (const player of gameState.players) {
-      if (player.pos.length > 0 && player.nickname.length > 0) {
-        const nicknameLabel = this.nicknameLabels.find(
-          (label) => label.playerId === player.id,
-        );
-
-        const firstCell = this.cells[0][0];
-        const labelX = firstCell.pos.x + player.pos[0].x * firstCell.cellSize;
-        const labelY =
-          firstCell.pos.y + (player.pos[0].y + 0.25) * firstCell.cellSize;
-
-        if (nicknameLabel === undefined) {
-          const newLabel = new NicknameLabel(
-            player.id,
-            player.nickname,
-            labelX,
-            labelY,
-            firstCell.cellSize * 0.4,
-          );
-
-          this.nicknameLabels.push(newLabel);
-          scene.add(newLabel);
-        } else {
-          nicknameLabel.pos.x = labelX;
-          nicknameLabel.pos.y = labelY;
-        }
-      }
-    }
-
-    this.nicknameLabels = this.nicknameLabels.filter((label) => {
-      const labelHasPlayer = gameState.players.some(
-        (player) => player.id === label.playerId,
-      );
-
-      if (labelHasPlayer === false) {
-        scene.remove(label);
-      }
-
-      return labelHasPlayer;
-    });
-
     this.cells.forEach((cellRow: GridCell[], rowIndex: number) => {
       cellRow.forEach((cell: GridCell, colIndex: number) => {
         cell.setEmpty();
+        this.labelCells[rowIndex][colIndex].text = "";
 
         for (const player of gameState.players) {
+          let posIndex = 0;
           for (const position of player.pos) {
             if (position.x === rowIndex && position.y === colIndex) {
               cell.setSnake();
+              this.labelCells[rowIndex][colIndex].text =
+                player.nickname[posIndex] ?? "";
 
               if (player.isDead) {
                 cell.setDeadSnake();
@@ -114,6 +78,7 @@ export class Grid {
 
               return;
             }
+            posIndex++;
           }
         }
 
