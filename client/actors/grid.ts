@@ -59,7 +59,7 @@ export class Grid {
 
   public update(gameState: GameState, scene: Scene) {
     for (const player of gameState.players) {
-      if (player.pos.length > 0) {
+      if (player.pos.length > 0 && player.nickname.length > 0) {
         const nicknameLabel = this.nicknameLabels.find(
           (label) => label.playerId === player.id,
         );

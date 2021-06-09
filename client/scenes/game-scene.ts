@@ -72,11 +72,7 @@ export class GameScene extends Scene {
               value: string;
             };
 
-          if (inputElement !== null && inputElement.value.length === 0) {
-            return;
-          }
-
-          this.playerNickname = inputElement?.value;
+          this.playerNickname = inputElement?.value ?? "";
         }
 
         this.socketClient.joinGame.bind(this.socketClient)(this.playerNickname);
