@@ -57,7 +57,6 @@ export class ClientInput {
     const yDiffAbs = Math.abs(yDiff);
     const diffAbs = Math.abs(xDiffAbs - yDiffAbs);
 
-    console.log(diffAbs)
     if (diffAbs < 50) {
       return;
     }
