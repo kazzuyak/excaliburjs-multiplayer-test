@@ -28,6 +28,11 @@ export class Button {
     this.update();
   }
 
+  public show() {
+    this.visibility = "visible";
+    this.update();
+  }
+
   public remove() {
     document.getElementById(this.options.divId)?.remove();
     this.isWritten = false;

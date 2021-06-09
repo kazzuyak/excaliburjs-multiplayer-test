@@ -31,6 +31,7 @@ export class GameServer {
     this.snakes.forEach((snake: Snake) => {
       if (!snake.isDead && this.isSnakeDead(snake)) {
         snake.kill();
+        this.socketServer.sendDeathEvent(snake.id);
       }
     });
 

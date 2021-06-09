@@ -12,6 +12,7 @@ const engine = new Engine({
 
 const gameScene = new GameScene(engine, socketClient);
 socketClient.addOnPingListener(gameScene.receiveUpdate.bind(gameScene));
+socketClient.addOnDeathListener(gameScene.onDeath.bind(gameScene));
 
 const clientInput = new ClientInput(engine);
 clientInput.addListener(socketClient.sendInput.bind(socketClient));

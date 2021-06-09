@@ -27,6 +27,11 @@ export class GameScene extends Scene {
     this.grid.update(data);
   }
 
+  public onDeath() {
+    this.playButton.options.text = "Play Again"
+    this.playButton.show();
+  }
+
   public onDeactivate() {
     this.grid.remove(this);
     this.playButton.remove();

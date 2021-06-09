@@ -9,7 +9,7 @@ type EmptyServerListener = () => void;
 
 export class SocketServer {
   private readonly io: Server;
-  private clients: { [K in string]: {} } = {};
+  private clients: { [K in string]?: Socket } = {};
   private joinGameListeners: JoinGameListener[] = [];
   private inputListeners: InputListener[] = [];
   private emptyServerListeners: EmptyServerListener[] = [];
@@ -21,6 +21,10 @@ export class SocketServer {
 
   public updateClients(gameState: GameState) {
     this.io.emit("ping", gameState);
+  }
+
+  public sendDeathEvent(id: string) {
+    this.clients[id]?.emit("dead");
   }
 
   public addJoinGameListener(callback: JoinGameListener) {
@@ -36,11 +40,11 @@ export class SocketServer {
   }
 
   private onConnection(socket: Socket) {
-    this.clients[socket.id] = {};
+    this.clients[socket.id] = socket;
 
     socket.on("join", () => {
       this.joinGameListeners.forEach((listener) => listener(socket.id));
-    })
+    });
 
     socket.on("input", (input: InputType) => {
       this.inputListeners.forEach((listener) => {
