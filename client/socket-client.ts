@@ -9,8 +9,12 @@ export class SocketClient {
   private readonly socket = io();
   private onPingListeners: PingCallback[] = [];
   private onDeathListeners: OnDeathCallBack[] = [];
+  public socketId?: string;
 
   constructor() {
+    this.socket.on("connect", () => {
+      this.socketId = this.socket.id;
+    })
     this.socket.on("disconnect", () => {
       location.reload();
     });

@@ -1,6 +1,7 @@
 import { Engine, Scene, Input } from "excalibur";
 import { GameState } from "../../shared/contracts/game-state";
 import { Grid } from "../actors/grid";
+import { ScoreLabel } from "../actors/score-label";
 import { ScreenInformation } from "../entities/screen-information";
 import { Button } from "../html-ui/button";
 import { HtmlInput } from "../html-ui/html-input";
@@ -10,6 +11,7 @@ export class GameScene extends Scene {
   private readonly grid = new Grid();
   private nameInput!: HtmlInput;
   private playButton!: Button;
+  private scoreLabel!: ScoreLabel;
   private playerNickname?: string;
 
   public constructor(
@@ -25,10 +27,26 @@ export class GameScene extends Scene {
     this.grid.init(this, screen);
     this.nameInput = new HtmlInput(this.nameInputOptions(screen));
     this.playButton = new Button(this.playButtonOptions(screen));
+    this.scoreLabel = new ScoreLabel(
+      screen.endingX - screen.screenSize * 0.21,
+      screen.startingY + screen.screenSize * 0.05,
+      screen.screenSize / 30,
+    );
+    this.add(this.scoreLabel);
   }
 
   public receiveUpdate(data: GameState) {
     this.grid.update(data, this);
+
+    const socketId = this.socketClient.socketId;
+    if (socketId === undefined) {
+      return;
+    }
+
+    const player = data.players.find((player) => player.id === socketId);
+    if (player !== undefined && !player.isDead) {
+      this.scoreLabel.text = `Score: ${player.pos.length}`;
+    }
   }
 
   public onDeath() {
