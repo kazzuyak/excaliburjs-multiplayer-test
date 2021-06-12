@@ -8,6 +8,7 @@ export class Snake {
   public isDead = false;
   public pos: { x: number; y: number }[] = [];
   private shouldGrow = false;
+  private queuedInput?: InputType;
 
   constructor(public readonly id: string, public readonly nickname: string, x: number, y: number) {
     this.pos.push({ x, y });
@@ -52,6 +53,11 @@ export class Snake {
 
     this.pos[0].x += this.vel.x;
     this.pos[0].y += this.vel.y;
+
+    if (this.queuedInput !== undefined) {
+      this.updateVel(this.queuedInput);
+      this.queuedInput = undefined;
+    }
   }
 
   public grow() {
@@ -68,6 +74,10 @@ export class Snake {
         neckPos.y === headPos.y &&
         (input === InputType.left || input === InputType.right)
       ) {
+        if (this.vel.y !== 0) {
+          this.queuedInput = input;
+        }
+
         return;
       }
 
@@ -75,6 +85,10 @@ export class Snake {
         neckPos.x === headPos.x &&
         (input === InputType.down || input === InputType.up)
       ) {
+        if (this.vel.x !== 0) {
+          this.queuedInput = input;
+        }
+
         return;
       }
     }
