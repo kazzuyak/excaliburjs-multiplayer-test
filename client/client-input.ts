@@ -29,6 +29,10 @@ export class ClientInput {
       [Keys.A]: InputType.left,
       [Keys.S]: InputType.down,
       [Keys.D]: InputType.right,
+      [Keys.Up]: InputType.up,
+      [Keys.Left]: InputType.left,
+      [Keys.Down]: InputType.down,
+      [Keys.Right]: InputType.right,
     };
 
     const input = keyMap[event.key];
