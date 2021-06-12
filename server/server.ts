@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import Bundler from "parcel-bundler";
+import path from "path";
 import { GameLoop } from "./game-loop";
 import { GameServer } from "./game-server";
 import { SocketServer } from "./socket-server";
@@ -19,7 +19,11 @@ socketServer.addJoinGameListener(gameServer.addSnake.bind(gameServer));
 socketServer.addInputListener(gameServer.receiveInput.bind(gameServer));
 gameLoop.addListener(gameServer.update.bind(gameServer));
 
-const bundler = new Bundler(__dirname + "/../client/game.html", {});
-app.use(bundler.middleware());
+
+app.use(express.static(path.join(__dirname, "../client")));
+app.get("/", (_req: any, res: any) => {
+  res.sendFile(path.join(__dirname, "../client/game.html"));
+});
+
 
 server.listen(process.env.PORT || 3000);

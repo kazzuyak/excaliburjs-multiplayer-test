@@ -5,8 +5,8 @@
   "private": "true",
   "scripts": {
     "start": "node dist/server/server.js",
-    "postinstall": "npm run build",
-    "build": "tsc && cp prod.html dist/client/game.html",
+    "build": "tsc && cp prod.html dist/client/game.html && npm run parcel",
+    "parcel": "parcel build client/game-client.ts -d dist/client",
     "dev": "nodemon server/server.ts"
   },
   "engines": {
