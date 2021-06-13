@@ -1,5 +1,5 @@
 import express from "express";
-import http from "http";
+import https from "https";
 import path from "path";
 import { GameLoop } from "./game-loop";
 import { GameServer } from "./game-server";
@@ -7,7 +7,7 @@ import { SocketServer } from "./socket-server";
 
 const app = express();
 
-const server = http.createServer(app);
+const server = https.createServer(app);
 const socketServer = new SocketServer(server);
 
 const gameLoop = new GameLoop();
