@@ -1,6 +1,7 @@
 import { InputType } from "../shared/enums/input-type";
 import { Food } from "./entities/food";
 import { Snake } from "./entities/snake";
+import { GameLoop } from "./game-loop";
 import { SocketServer } from "./socket-server";
 
 export class GameServer {
@@ -8,11 +9,15 @@ export class GameServer {
   private readonly foods: Food[] = [];
   private readonly mapSize = 20;
 
-  constructor(private readonly socketServer: SocketServer) {}
+  constructor(
+    private readonly socketServer: SocketServer,
+    private readonly gameLoop: GameLoop,
+  ) {}
 
   public addSnake(id: string, nickname: string) {
     this.snakes.push(new Snake(id, nickname, 0, 0));
     this.foods.push(new Food(this.getRandomPos(), this.getRandomPos()));
+    this.gameLoop.startLoop();
   }
 
   public update() {
@@ -44,6 +49,10 @@ export class GameServer {
       })),
       foods: this.foods,
     });
+
+    if (this.snakes.length === 0) {
+      this.gameLoop.stopLoop();
+    }
   }
 
   private onEatFood(snake: Snake) {

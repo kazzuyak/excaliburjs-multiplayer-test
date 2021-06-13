@@ -12,9 +12,8 @@ const socketServer = new SocketServer(server);
 
 const gameLoop = new GameLoop();
 socketServer.addEmptyServerListener(gameLoop.stopLoop.bind(gameLoop));
-socketServer.addJoinGameListener(gameLoop.startLoop.bind(gameLoop));
 
-const gameServer = new GameServer(socketServer);
+const gameServer = new GameServer(socketServer, gameLoop);
 socketServer.addJoinGameListener(gameServer.addSnake.bind(gameServer));
 socketServer.addInputListener(gameServer.receiveInput.bind(gameServer));
 gameLoop.addListener(gameServer.update.bind(gameServer));
