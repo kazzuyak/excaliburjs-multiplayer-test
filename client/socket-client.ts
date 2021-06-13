@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { GameState } from "../shared/contracts/game-state";
+import { MinimizedGameState } from "../shared/contracts/minimized-game-state";
 import { InputType } from "../shared/enums/input-type";
 
 type PingCallback = (gameState: GameState) => void;
@@ -14,11 +15,21 @@ export class SocketClient {
   constructor() {
     this.socket.on("connect", () => {
       this.socketId = this.socket.id;
-    })
+    });
     this.socket.on("disconnect", () => {
       location.reload();
     });
-    this.socket.on("ping", (gameState: GameState) => {
+    this.socket.on("ping", (minimizedGameState: MinimizedGameState) => {
+      const gameState: GameState = {
+        foods: minimizedGameState.f,
+        players: minimizedGameState.p.map((player) => ({
+          pos: player.p,
+          isDead: player.d,
+          nickname: player.n,
+          id: player.i,
+        })),
+      };
+
       this.onPingListeners.forEach((listener) => listener(gameState));
     });
     this.socket.on("dead", () => {

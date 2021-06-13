@@ -1,6 +1,7 @@
 import http from "http";
 import { Server, Socket } from "socket.io";
 import { GameState } from "../shared/contracts/game-state";
+import { MinimizedGameState } from "../shared/contracts/minimized-game-state";
 import { InputType } from "../shared/enums/input-type";
 
 type JoinGameListener = (id: string, nickname: string) => void;
@@ -20,7 +21,17 @@ export class SocketServer {
   }
 
   public updateClients(gameState: GameState) {
-    this.io.emit("ping", gameState);
+    const minimizedGameState: MinimizedGameState = {
+      p: gameState.players.map((player) => ({
+        p: player.pos,
+        d: player.isDead,
+        n: player.nickname,
+        i: player.id,
+      })),
+      f: gameState.foods,
+    };
+
+    this.io.emit("ping", minimizedGameState);
   }
 
   public sendDeathEvent(id: string) {
@@ -43,7 +54,9 @@ export class SocketServer {
     this.clients[socket.id] = socket;
 
     socket.on("join", (nickname: string) => {
-      this.joinGameListeners.forEach((listener) => listener(socket.id, nickname));
+      this.joinGameListeners.forEach((listener) =>
+        listener(socket.id, nickname),
+      );
     });
 
     socket.on("input", (input: InputType) => {
