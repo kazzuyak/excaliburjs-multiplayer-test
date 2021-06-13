@@ -11,8 +11,14 @@ export class GameLoop {
       return;
     }
 
+    let lastUpdate = Date.now();
+
+
     this.serverInterval = setInterval(() => {
       this.listeners.forEach((listener) => listener());
+      let now = Date.now();
+      console.log(now - lastUpdate);
+      lastUpdate = now;
     }, 150);
   }
 
