@@ -9,7 +9,6 @@ This game is just for practicing how an online game works, using Client-Server a
 ### Try the game
 
 https://excaliburjs-snake-online.herokuapp.com/
-> :warning: **Work in progress**: The game is not ready yet!
 
 ## Features
 
